@@ -39,6 +39,9 @@ namespace LidlStore.API
 
             services.AddTransient<ICategorieBL, CategorieBL>();
             services.AddTransient<ICategorieRepository, CategorieRepository>();
+
+            services.AddTransient<IProduitBL, ProduitBL>();
+            services.AddTransient<IProduitRepository, ProduitRepository>();
             #endregion
 
             services.AddSwaggerGen(c =>
