@@ -8,3 +8,15 @@ Nugget's nécessaires pour Scaffolding :
 EntityFrameworkCore.SqlServer
 Microsoft.EntityFrameworkCore.Tools
 Microsoft.EntityFrameworkCore.Design
+
+-----------------------------------------------------------------------------------------------------------
+ SWAGGER
+-----------------------------------------------------------------------------------------------------------
+
+Nugget's nécessaires pour Scaffolding : 
+Swashbuckle.AspNetCore
+
+
+
+
+
