@@ -1,5 +1,6 @@
 ﻿using LidlStore.BL.Interfaces;
 using LidlStore.Data.Interfaces;
+using LidlStore.Models.Exceptions;
 using LidlStore.Models.Models;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,9 @@ namespace LidlStore.BL.Implementations
 
         public List<ProduitDTO> GetAll()
         {
-            return _produitRepository.GetAll();
+            var produitDTOs = _produitRepository.GetAll();
+
+            return produitDTOs;
         }
 
         public ProduitDTO GetById(int id)

@@ -1,4 +1,5 @@
 ﻿using LidlStore.BL.Interfaces;
+using LidlStore.Models.Exceptions;
 using LidlStore.Models.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,28 +15,54 @@ namespace LidlStore.API.Controllers
     public class ProduitController : ControllerBase
     {
         private readonly IProduitBL _produitBL;
+        private readonly ICategorieBL _categorieBL;
 
-        public ProduitController(IProduitBL produitBL)
+        public ProduitController(IProduitBL produitBL, ICategorieBL categorieBL)
         {
             _produitBL = produitBL;
+            _categorieBL = categorieBL;
         }
 
         [HttpPost]
         public ActionResult<int> Post([FromBody] ProduitDTO produitDTO)
         {
-            return Ok(_produitBL.Post(produitDTO));
+            try
+            {
+                var categorie = _categorieBL.GetById(produitDTO.IdCategorie);
+                return Ok(_produitBL.Post(produitDTO));
+            }
+            catch (NotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         [HttpGet("{id}")]
         public ActionResult<ProduitDTO> GetById(int id)
         {
-            return Ok(_produitBL.GetById(id));
+            try
+            {
+                return Ok(_produitBL.GetById(id));
+            }
+            catch (NotFoundException e)
+            {
+
+                return NotFound(e.Message);
+            }
         }
 
         [HttpGet]
         public ActionResult<List<ProduitDTO>> GetAll()
         {
-            return Ok(_produitBL.GetAll());
+            try
+            {
+                return Ok(_produitBL.GetAll());
+            }
+            catch (NotFoundException e)
+            {
+
+                return NotFound(e.Message);
+            }
         }
 
         [HttpDelete("{id}")]

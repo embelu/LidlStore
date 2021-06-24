@@ -1,5 +1,6 @@
 ﻿using LidlStore.BL.Interfaces;
 using LidlStore.Data.Interfaces;
+using LidlStore.Models.Exceptions;
 using LidlStore.Models.Models;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,9 @@ namespace LidlStore.BL.Implementations
 
         public List<CategorieDTO> GetAll()
         {
-            return _categorieRepository.GetAll();
+            var categorieDTOs = _categorieRepository.GetAll();
+
+            return categorieDTOs;
         }
 
         public CategorieDTO GetById(int id)

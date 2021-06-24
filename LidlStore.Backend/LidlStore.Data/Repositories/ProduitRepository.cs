@@ -1,5 +1,6 @@
 ﻿using LidlStore.Data.Entities;
 using LidlStore.Data.Interfaces;
+using LidlStore.Models.Exceptions;
 using LidlStore.Models.Models;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,11 @@ namespace LidlStore.Data.Repositories
         {
             List<LidlProduitLb> lidlProduitLbs = _context.LidlProduitLbs.ToList();
 
+            if (lidlProduitLbs.Count == 0)
+            {
+                throw new NotFoundException("Pas de produits présents en DB");
+            }
+
             List<ProduitDTO> produitDTOs = new List<ProduitDTO>();
             foreach (var item in lidlProduitLbs)
             {
@@ -43,6 +49,11 @@ namespace LidlStore.Data.Repositories
         public ProduitDTO GetById(int id)
         {
             LidlProduitLb lidlProduitLb = _context.LidlProduitLbs.Find(id);
+
+            if (lidlProduitLb == null)
+            {
+                throw new NotFoundException($"Produit inexistant :  {id} !");
+            }
 
             return new ProduitDTO()
             {

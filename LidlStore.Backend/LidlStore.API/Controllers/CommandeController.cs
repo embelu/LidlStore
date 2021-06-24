@@ -1,4 +1,5 @@
 ﻿using LidlStore.BL.Interfaces;
+using LidlStore.Models.Exceptions;
 using LidlStore.Models.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,15 @@ namespace LidlStore.API.Controllers
         [HttpPost]
         public ActionResult<int> Post([FromBody] CommandeDTO commandeDTO)
         {
-            return Ok(_commandeBL.Post(commandeDTO));
+            try
+            {
+                return Ok(_commandeBL.Post(commandeDTO));
+            }
+            catch (CommandeException e)
+            {
+
+                return BadRequest(e.Message);
+            }
         }
 
 

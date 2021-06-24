@@ -1,5 +1,6 @@
 ﻿using LidlStore.BL.Interfaces;
 using LidlStore.Data.Interfaces;
+using LidlStore.Models.Exceptions;
 using LidlStore.Models.Models;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,19 @@ namespace LidlStore.BL.Implementations
 
         public int Post(CommandeDTO commandeDTO)
         {
+            if (commandeDTO.Statut != "En cours" && commandeDTO.Statut != "Clôturée" && commandeDTO.Statut != "Annulée")
+            {
+                throw new CommandeException($"Statut incorrect (\"En cours\", \"Clôturée\", \"Annulée\" accepté)");
+            }
+
+            foreach (var item in commandeDTO.DetailCommandeDTOs)
+            {
+                if (item.Quantite == 0)
+                {
+                    throw new CommandeException($"Quantité absente pour le produit {item.IdProduit}");
+                }
+            }
+
             return _commandeRepository.Post(commandeDTO);
         }
 

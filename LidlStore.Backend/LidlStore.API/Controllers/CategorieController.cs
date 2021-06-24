@@ -1,4 +1,5 @@
 ﻿using LidlStore.BL.Interfaces;
+using LidlStore.Models.Exceptions;
 using LidlStore.Models.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,13 +29,29 @@ namespace LidlStore.API.Controllers
         [HttpGet("{id}")]
         public ActionResult<CategorieDTO> GetById(int id)
         {
-            return Ok(_categorieBL.GetById(id));
+            try
+            {
+                return Ok(_categorieBL.GetById(id));
+            }
+            catch (NotFoundException e)
+            {
+
+                return NotFound(e.Message);
+            }
         }
 
         [HttpGet]
         public ActionResult<List<CategorieDTO>> GetAll()
         {
-            return Ok(_categorieBL.GetAll());
+            try
+            {
+                return Ok(_categorieBL.GetAll());
+            }
+            catch (NotFoundException e)
+            {
+
+                return NotFound(e.Message);
+            }
         }
 
         [HttpDelete("{id}")]
