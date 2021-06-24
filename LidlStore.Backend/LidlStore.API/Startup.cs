@@ -1,10 +1,13 @@
+using LidlStore.API.HealthCheck;
 using LidlStore.BL.Implementations;
 using LidlStore.BL.Interfaces;
 using LidlStore.Data.Entities;
 using LidlStore.Data.Interfaces;
 using LidlStore.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,6 +53,14 @@ namespace LidlStore.API
             services.AddTransient<IDetailCommandeRepository, DetailCommandeRepository>();
             #endregion
 
+            #region HealthCheck
+            services.AddHealthChecks();
+            services.AddHealthChecks().AddDbContextCheck<DB_FormationContext>()
+                                      .AddUrlGroup(new Uri("https://google.be"), name: "Google")
+                                      .AddCheck<CustomHealthCheck>(name: "New Custom Check");
+            #endregion
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -82,6 +94,25 @@ namespace LidlStore.API
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Music V1");
             });
 
+            app.UseHealthChecks("/health", new HealthCheckOptions
+            {
+                ResponseWriter = async (context, report) =>
+                {
+                    context.Response.ContentType = "application/json"; // Le type de réponse doit être du Json
+                    var response = new HealthCheckReponse
+                    {
+                        Status = report.Status.ToString(),
+                        HealthChecks = report.Entries.Select(x => new IndividualHealthCheckResponse
+                        {
+                            Component = x.Key,
+                            Status = x.Value.Status.ToString(),
+                            Description = x.Value.Description
+                        }),
+                        HealthCheckDuration = report.TotalDuration
+                    };
+                    await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
+                }
+            });
         }
     }
 }
