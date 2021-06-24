@@ -9,4 +9,9 @@
     <ProjectReference Include="..\LidlStore.Models\LidlStore.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+    <Folder Include="Implementations\" />
+  </ItemGroup>
+
 </Project>
