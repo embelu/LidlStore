@@ -1,4 +1,5 @@
 ﻿using LidlStore.Data.Entities;
+using LidlStore.Data.Helpers;
 using LidlStore.Data.Interfaces;
 using LidlStore.Models.Exceptions;
 using LidlStore.Models.Models;
@@ -55,25 +56,32 @@ namespace LidlStore.Data.Repositories
                 throw new NotFoundException($"Produit inexistant :  {id} !");
             }
 
-            return new ProduitDTO()
-            {
-                Id = lidlProduitLb.Id,
-                Nom = lidlProduitLb.Nom,
-                Description = lidlProduitLb.Description,
-                LienImg = lidlProduitLb.LienImg,
-                IdCategorie = lidlProduitLb.IdCategorie,
-                Prix = lidlProduitLb.Prix
-            };
+            return lidlProduitLb.ToDTO();
+
+            // REMPLACE PAR METHODE EXTENSION
+            //return new ProduitDTO()
+            //{
+            //    Id = lidlProduitLb.Id,
+            //    Nom = lidlProduitLb.Nom,
+            //    Description = lidlProduitLb.Description,
+            //    LienImg = lidlProduitLb.LienImg,
+            //    IdCategorie = lidlProduitLb.IdCategorie,
+            //    Prix = lidlProduitLb.Prix
+            //};
         }
 
         public int Post(ProduitDTO produitDTO)
         {
             LidlProduitLb lidlProduitLb = new LidlProduitLb();
-            lidlProduitLb.Nom = produitDTO.Nom;
-            lidlProduitLb.Description = produitDTO.Description;
-            lidlProduitLb.LienImg = produitDTO.LienImg;
-            lidlProduitLb.IdCategorie = produitDTO.IdCategorie;
-            lidlProduitLb.Prix = produitDTO.Prix;
+
+            lidlProduitLb = produitDTO.FromDTO();
+        
+            // REMPLACE PAR METHODE EXTENSION
+            //lidlProduitLb.Nom = produitDTO.Nom;
+            //lidlProduitLb.Description = produitDTO.Description;
+            //lidlProduitLb.LienImg = produitDTO.LienImg;
+            //lidlProduitLb.IdCategorie = produitDTO.IdCategorie;
+            //lidlProduitLb.Prix = produitDTO.Prix;
 
             _context.LidlProduitLbs.Add(lidlProduitLb);
             _context.SaveChanges();
